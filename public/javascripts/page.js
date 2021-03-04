@@ -15,6 +15,12 @@ const getCountries = function(ev) {
     req.init();
     req.getFile(`/countries/${ev.target.value}`, showCountries);
 };
+
+const getCities = function(ev) {
+    let req = Object.create(Ajax);
+    req.init();
+    req.getFile(`/cities/${ev.target.value}`, showCities);
+};
 /*
  * callback function for the above AJaX
  */
@@ -46,6 +52,31 @@ const showContinents = function(e) {
     $("contdata").appendChild(div);
 }
 
+const showCities = function (e) {
+    let element = $("citydata");
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+
+    let div = document.createElement("div");
+    let h3 = document.createElement('h3');
+    let txt = document.createTextNode('The Cities');
+    h3.appendChild(txt);
+    div.appendChild(h3);
+    let cities = JSON.parse(e.target.responseText);
+
+    cities.forEach(function(city) {
+        let li = document.createElement('li');
+        let litext = document.createTextNode(city.name);
+        li.appendChild(litext);
+        div.appendChild(li);
+    });
+
+    $("citydata").appendChild(div);
+
+
+}
+
 const showCountries = function (e) {
     /*
      * here you put the ajax response onto your page DOM
@@ -63,10 +94,10 @@ const showCountries = function (e) {
     let countries = JSON.parse(e.target.responseText);
     let sel = document.createElement('select');
     sel.setAttribute('id', 'chooseCountry');
-    // sel.addEventListener('change', getCountries);
+    sel.addEventListener('change', getCities);
     countries.forEach(function(country) {
         let opt = document.createElement('option');
-        let opttext = document.createTextNode(country.name);
+        let opttext = document.createTextNode(country.code);
         opt.appendChild(opttext);
         sel.appendChild(opt);
     });
